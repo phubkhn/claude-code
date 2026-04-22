@@ -1,0 +1,11 @@
+{
+  "id": "claude-code-dev-kit",
+  "name": "Claude Code Dev Kit",
+  "version": "0.1.0",
+  "description": "Team plugin skeleton to organize skills, hooks, and command guides for Claude Code.",
+  "entrypoints": {
+    "skills_dir": "skills",
+    "hooks_dir": "hooks",
+    "commands_dir": "commands"
+  }
+}
