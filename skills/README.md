@@ -2,6 +2,17 @@
 
 This directory stores Claude Code skills.
 
+## Current Skills
+
+- `golang-patterns`
+- `java-coding-standards`
+- `jpa-patterns`
+- `security-review`
+- `springboot-patterns`
+- `springboot-security`
+- `springboot-tdd`
+- `springboot-verification`
+
 ## Suggested Layout
 
 ```text

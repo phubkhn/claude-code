@@ -1,94 +1,85 @@
-# Claude Code Dev Kit
+# Claude Code Backend Plugin Kit
 
-Documentation and starter skeleton to standardize how your team uses **Claude Code**:
-- Organize `skills`, `hooks`, and `commands` in a scalable structure.
-- Prepare a clean base to package as a plugin later.
-- Include local installation guidance from day one.
+This repository is a focused Claude Code plugin workspace for backend teams using Java/Spring and Go.
 
 ## Goals
 
-- Use this repository as the source of truth for Claude Code workflows.
-- Centralize best practices for prompts, skills, hooks, and commands.
-- Evolve it into a team-maintained Claude Code plugin.
+- Keep reusable Java/Spring, Go, and security workflows in one place.
+- Provide a plugin-ready structure for local install and future publishing.
+- Standardize review, build-fix, and security workflows.
 
-## Repository Structure
+## Current Structure
 
 ```text
 .
 ├── .claude-plugin/
 │   └── plugin.json
+├── agents/
+│   ├── go-build-resolver.md
+│   ├── go-reviewer.md
+│   ├── java-build-resolver.md
+│   ├── java-reviewer.md
+│   └── security-reviewer.md
 ├── commands/
-│   └── README.md
+│   ├── README.md
+│   ├── code-review.md
+│   └── gradle-build.md
+├── docs/
+│   └── INSTALL_PLUGIN.md
 ├── hooks/
 │   └── README.md
+├── rules/
+│   ├── common/
+│   └── java/
 ├── skills/
+│   ├── golang-patterns/
+│   ├── java-coding-standards/
+│   ├── jpa-patterns/
+│   ├── security-review/
+│   ├── springboot-patterns/
+│   ├── springboot-security/
+│   ├── springboot-tdd/
+│   ├── springboot-verification/
 │   └── README.md
-└── docs/
-    └── INSTALL_PLUGIN.md
+└── README.md
 ```
 
-## Core Components
+## Key Components
 
-### 1) Skills
+### Agents
 
-- Store focused workflows by use case:
-  - feature delivery
-  - code review
-  - bug fixing
-  - test authoring
-- Each skill should contain:
-  - `SKILL.md`
-  - input/output examples
-  - explicit quality gates
+- `go-reviewer`: Go code review gate.
+- `go-build-resolver`: Go build/vet/lint issue fixer.
+- `java-reviewer`: Java and Spring Boot review gate.
+- `java-build-resolver`: Maven/Gradle build issue fixer.
+- `security-reviewer`: vulnerability-focused reviewer.
 
-Details: `skills/README.md`
+### Rules
 
-### 2) Hooks
+- `rules/common/`: cross-project guardrails (workflow, security, hooks, code review).
+- `rules/java/`: Java/Spring conventions and checks.
 
-- Automate checks before and after tasks:
-  - format/lint
-  - fast unit tests
-  - policy checks
-- Reduce errors during agent-driven code changes.
+### Skills
 
-Details: `hooks/README.md`
+- Go development patterns via `golang-patterns`.
+- Framework and architecture skills for Spring Boot.
+- Dedicated `security-review` skill for security triage and checklists.
 
-### 3) Commands
+### Commands
 
-- Standardize frequently used commands:
-  - environment bootstrap
-  - test execution
-  - validation pipeline
-- Map these to team command shortcuts when needed.
+- Reusable command documents for review and build workflows.
 
-Details: `commands/README.md`
+## Plugin Manifest Notes
 
-## Plugin Skeleton
+Plugin config lives in `.claude-plugin/plugin.json`.
+It follows an array-based component layout compatible with Claude plugin validation.
 
-This repository includes:
+## Installation
 
-- `.claude-plugin/plugin.json`
-
-This manifest is the minimum starting point for an internal plugin package. You can extend it with:
-- metadata versioning
-- public skill listings
-- hook registration
-- command aliases
-
-## Local Plugin Installation
-
-See:
-
-- `docs/INSTALL_PLUGIN.md`
+Use [docs/INSTALL_PLUGIN.md](/Users/dirak/Documents/AI/POC_MAKER/claude_code/claude-code/docs/INSTALL_PLUGIN.md).
 
 ## Contribution Rules
 
-- Keep content short, clear, and runnable.
-- Every change should be tied to a practical use case.
-- New skills must include goal, input/output contract, and verification checklist.
-
-## Suggested Roadmap
-
-- V1: standardize docs and skill templates.
-- V2: standardize lint/test/policy hooks.
-- V3: complete plugin packaging and release process.
+- Keep docs and instructions concrete and runnable.
+- Prefer small, task-specific skills and agents.
+- Keep commit messages short.
