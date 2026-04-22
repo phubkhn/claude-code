@@ -1,21 +1,21 @@
 # Claude Code Dev Kit
 
-Kho tài liệu + skeleton để chuẩn hoá cách dùng **Claude Code** cho team dev:
-- Tổ chức `skills`, `hooks`, `commands` theo chuẩn dễ mở rộng.
-- Chuẩn bị sẵn cấu trúc để publish thành plugin sau này.
-- Có hướng dẫn cài đặt để dùng local ngay.
+Documentation and starter skeleton to standardize how your team uses **Claude Code**:
+- Organize `skills`, `hooks`, and `commands` in a scalable structure.
+- Prepare a clean base to package as a plugin later.
+- Include local installation guidance from day one.
 
-## Mục tiêu
+## Goals
 
-- Dùng repo này làm nguồn chuẩn cho workflow Claude Code trong dự án.
-- Gom best-practice về prompt/skill/hook/cmd vào một chỗ.
-- Có thể phát triển dần thành plugin riêng cho team.
+- Use this repository as the source of truth for Claude Code workflows.
+- Centralize best practices for prompts, skills, hooks, and commands.
+- Evolve it into a team-maintained Claude Code plugin.
 
-## Cấu trúc repo
+## Repository Structure
 
 ```text
 .
-├── .codex-plugin/
+├── .claude-plugin/
 │   └── plugin.json
 ├── commands/
 │   └── README.md
@@ -27,68 +27,68 @@ Kho tài liệu + skeleton để chuẩn hoá cách dùng **Claude Code** cho te
     └── INSTALL_PLUGIN.md
 ```
 
-## Thành phần chính
+## Core Components
 
 ### 1) Skills
 
-- Chứa workflow theo từng use case:
-  - tạo feature
-  - review code
-  - fix bug
-  - viết test
-- Mỗi skill nên có:
+- Store focused workflows by use case:
+  - feature delivery
+  - code review
+  - bug fixing
+  - test authoring
+- Each skill should contain:
   - `SKILL.md`
-  - ví dụ input/output
-  - rule rõ ràng về quality gate
+  - input/output examples
+  - explicit quality gates
 
-Chi tiết: `skills/README.md`
+Details: `skills/README.md`
 
 ### 2) Hooks
 
-- Tự động chạy các bước kiểm tra trước/sau tác vụ:
+- Automate checks before and after tasks:
   - format/lint
-  - unit test nhanh
-  - policy check
-- Giúp giảm lỗi khi agent thao tác code.
+  - fast unit tests
+  - policy checks
+- Reduce errors during agent-driven code changes.
 
-Chi tiết: `hooks/README.md`
+Details: `hooks/README.md`
 
 ### 3) Commands
 
-- Tập hợp lệnh chuẩn để dùng nhất quán:
-  - bootstrap môi trường
-  - chạy test
-  - chạy pipeline kiểm tra
-- Có thể map thành command shortcuts cho team.
+- Standardize frequently used commands:
+  - environment bootstrap
+  - test execution
+  - validation pipeline
+- Map these to team command shortcuts when needed.
 
-Chi tiết: `commands/README.md`
+Details: `commands/README.md`
 
-## Plugin skeleton
+## Plugin Skeleton
 
-Repo đã có file:
+This repository includes:
 
-- `.codex-plugin/plugin.json`
+- `.claude-plugin/plugin.json`
 
-Đây là manifest tối thiểu để bắt đầu đóng gói plugin nội bộ. Khi mở rộng, có thể bổ sung:
+This manifest is the minimum starting point for an internal plugin package. You can extend it with:
 - metadata versioning
-- danh sách skill public
+- public skill listings
 - hook registration
 - command aliases
 
-## Cách cài plugin local
+## Local Plugin Installation
 
-Xem file hướng dẫn:
+See:
 
 - `docs/INSTALL_PLUGIN.md`
 
-## Quy ước đóng góp
+## Contribution Rules
 
-- Ưu tiên nội dung ngắn, rõ, có ví dụ chạy được.
-- Mỗi thay đổi nên kèm use case thực tế.
-- Nếu thêm skill mới: cần mô tả mục tiêu + đầu vào/đầu ra + checklist xác nhận.
+- Keep content short, clear, and runnable.
+- Every change should be tied to a practical use case.
+- New skills must include goal, input/output contract, and verification checklist.
 
-## Roadmap gợi ý
+## Suggested Roadmap
 
-- V1: chuẩn hoá docs + skill templates.
-- V2: chuẩn hoá hooks lint/test/policy.
-- V3: plugin hoá đầy đủ và có release process.
+- V1: standardize docs and skill templates.
+- V2: standardize lint/test/policy hooks.
+- V3: complete plugin packaging and release process.

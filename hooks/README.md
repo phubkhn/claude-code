@@ -1,14 +1,14 @@
 # Hooks Directory
 
-Thư mục này mô tả các hook dùng để kiểm soát chất lượng khi Claude Code thao tác.
+This directory describes hooks used for quality control in Claude Code workflows.
 
-## Use cases phổ biến
+## Common Use Cases
 
-- `pre-task`: kiểm tra ngữ cảnh trước khi chạy task
-- `pre-commit`: format + lint + test nhanh
-- `post-task`: tổng hợp kết quả và cảnh báo rủi ro
+- `pre-task`: validate context before execution
+- `pre-commit`: run format + lint + fast tests
+- `post-task`: summarize outcome and risks
 
-## Khuyến nghị
+## Recommendations
 
-- Hook cần chạy nhanh, deterministic.
-- Nếu hook fail, trả thông báo rõ ràng và có action fix.
+- Hooks should be fast and deterministic.
+- On failure, return clear messages with direct remediation steps.

@@ -1,48 +1,50 @@
-# Cài Plugin Local Cho Claude Code
+# Install This Plugin Locally (Claude Code)
 
-Tài liệu này hướng dẫn cài plugin từ repo này để dùng nội bộ.
+This guide explains how to install this repository as a local plugin for Claude Code.
 
-## 1) Clone repo
+## 1) Clone The Repository
 
 ```bash
 git clone https://github.com/phubkhn/claude-code.git
 cd claude-code
 ```
 
-## 2) Kiểm tra manifest plugin
+## 2) Verify The Plugin Manifest
 
-Đảm bảo file tồn tại:
+Make sure this file exists:
 
 ```text
-.codex-plugin/plugin.json
+.claude-plugin/plugin.json
 ```
 
-## 3) Liên kết plugin vào môi trường Claude Code
+## 3) Link It Into Your Claude Code Plugin Path
 
-Tuỳ môi trường, bạn có thể:
-- thêm repo vào danh sách plugin local của Claude Code
-- hoặc symlink repo vào thư mục plugin local mà Claude Code đang đọc
+Depending on your local setup, you can:
+- register this repository in your Claude Code local plugin list
+- or create a symlink into the plugin directory Claude Code scans
 
-Ví dụ symlink (Linux/macOS):
+Example symlink (Linux/macOS):
 
 ```bash
-mkdir -p "$HOME/.codex/plugins/local"
-ln -s "$(pwd)" "$HOME/.codex/plugins/local/claude-code-dev-kit"
+mkdir -p "$HOME/.claude/plugins/local"
+ln -s "$(pwd)" "$HOME/.claude/plugins/local/claude-code-dev-kit"
 ```
 
-## 4) Khởi động lại Claude Code
+If your Claude Code installation uses a different plugin directory, adjust the path accordingly.
 
-- Restart app/CLI để Claude Code load plugin mới.
-- Xác nhận plugin được nhận bằng cách kiểm tra danh sách skills/hooks/commands.
+## 4) Restart Claude Code
 
-## 5) Kiểm tra nhanh
+- Restart the app/CLI so the new plugin is loaded.
+- Confirm that skills/hooks/commands from this repo are visible.
 
-- Mở thư mục `skills/`, `hooks/`, `commands/`
-- Thêm 1 skill thử nghiệm
-- Reload Claude Code và kiểm tra skill đã xuất hiện
+## 5) Smoke Test
 
-## Gợi ý mở rộng
+- Open `skills/`, `hooks/`, and `commands/`
+- Add one sample skill
+- Reload Claude Code and verify the skill appears
 
-- Tách skill theo domain: backend/frontend/devops
-- Hook pre-commit cho lint/test
-- Bundle command templates theo stack (Python/Node/Go)
+## Recommended Next Steps
+
+- Split skills by domain: backend/frontend/devops
+- Add a `pre-commit` hook for lint/test
+- Build command templates by stack (Python/Node/Go)

@@ -1,8 +1,8 @@
 # Skills Directory
 
-Thư mục này chứa các skill cho Claude Code.
+This directory stores Claude Code skills.
 
-## Định dạng gợi ý
+## Suggested Layout
 
 ```text
 skills/
@@ -12,15 +12,15 @@ skills/
     └── templates/
 ```
 
-## Nội dung nên có trong `SKILL.md`
+## What A `SKILL.md` Should Include
 
-- Mục tiêu skill
-- Input kỳ vọng
-- Output kỳ vọng
-- Workflow từng bước
-- Checklist chất lượng
+- Skill goal
+- Expected input
+- Expected output
+- Step-by-step workflow
+- Quality checklist
 
-## Quy tắc
+## Rules
 
-- Mỗi skill chỉ giải quyết một use case rõ ràng.
-- Ví dụ phải ngắn và chạy được trong thực tế.
+- Each skill should solve one clear use case.
+- Keep examples short and practical.
