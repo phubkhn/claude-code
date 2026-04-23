@@ -2,43 +2,44 @@
 
 > This file extends [common/git-workflow.md](./git-workflow.md) with the full feature development process that happens before git operations.
 
-The Feature Implementation Workflow describes the development pipeline: research, planning, TDD, code review, and then committing to git.
+The Feature Implementation Workflow describes the development pipeline: local discovery, implementation, verification, code review, and then committing to git.
 
 ## Feature Implementation Workflow
 
-0. **Research & Reuse** _(mandatory before any new implementation)_
-   - **GitHub code search first:** Run `gh search repos` and `gh search code` to find existing implementations, templates, and patterns before writing anything new.
-   - **Library docs second:** Use Context7 or primary vendor docs to confirm API behavior, package usage, and version-specific details before implementing.
-   - **Exa only when the first two are insufficient:** Use Exa for broader web research or discovery after GitHub search and primary docs.
-   - **Check package registries:** Search npm, PyPI, crates.io, and other registries before writing utility code. Prefer battle-tested libraries over hand-rolled solutions.
-   - **Search for adaptable implementations:** Look for open-source projects that solve 80%+ of the problem and can be forked, ported, or wrapped.
-   - Prefer adopting or porting a proven approach over writing net-new code when it meets the requirement.
+0. **Discover & Reuse** _(mandatory before new implementation)_
+   - Search the current workspace for similar implementations before writing new code.
+   - Read primary framework/library documentation for the APIs you will touch.
+   - Prefer adapting an existing project pattern over introducing a brand-new structure.
+   - Confirm the build tool and validation commands up front (`go`, `mvn`, or `gradle`).
 
 1. **Plan First**
-   - Use **planner** agent to create implementation plan
-   - Generate planning docs before coding: PRD, architecture, system_design, tech_doc, task_list
-   - Identify dependencies and risks
-   - Break down into phases
+   - Define the scope, affected files, dependencies, and risks before editing.
+   - Break the work into small, verifiable steps.
+   - Prefer incremental changes that can be validated quickly.
 
-2. **TDD Approach**
-   - Use **tdd-guide** agent
-   - Write tests first (RED)
-   - Implement to pass tests (GREEN)
-   - Refactor (IMPROVE)
-   - Verify 80%+ coverage
+2. **Test-First When Practical**
+   - For bug fixes and new behavior, add or update tests as early as possible.
+   - Keep the red -> green -> refactor loop small.
+   - If tests cannot be added, document why and compensate with targeted verification.
 
 3. **Code Review**
    - Use **go-reviewer** after writing Go code
    - Use **java-reviewer** after writing Java/Spring code
    - Address CRITICAL and HIGH issues
-   - Fix MEDIUM issues when possible
+   - Fix MEDIUM issues when practical
 
-4. **Commit & Push**
+4. **Verify Before Commit**
+   - Run the relevant project checks for the affected stack
+   - For Go: `go test ./...`, `go vet ./...`, `go build ./...`
+   - For Maven: `./mvnw verify -q` or `mvn verify -q`
+   - For Gradle: `./gradlew check` and `./gradlew build`
+
+5. **Commit & Push**
    - Keep commit messages short and clear
    - Follow conventional commits format
    - See [git-workflow.md](./git-workflow.md) for commit message format and PR process
 
-5. **Pre-Review Checks**
+6. **Pre-Review Checks**
    - Verify all automated checks (CI/CD) are passing
    - Resolve any merge conflicts
    - Ensure branch is up to date with target branch

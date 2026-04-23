@@ -5,8 +5,6 @@ argument-hint: [pr-number | pr-url | blank for local review]
 
 # Code Review
 
-> PR review mode adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
-
 **Input**: $ARGUMENTS
 
 ---
@@ -50,15 +48,12 @@ Read each changed file in full. Check for:
 - Files > 800 lines
 - Nesting depth > 4 levels
 - Missing error handling
-- console.log statements
+- leftover debug logging
 - TODO/FIXME comments
-- Missing JSDoc for public APIs
 
 **Best Practices (MEDIUM):**
 - Mutation patterns (use immutable instead)
-- Emoji usage in code/comments
 - Missing tests for new code
-- Accessibility issues (a11y)
 
 ### Phase 3 — REPORT
 
@@ -99,7 +94,7 @@ If PR not found, stop with error. Store PR metadata for later phases.
 Build review context:
 
 1. **Project rules** — Read `CLAUDE.md`, `.claude/docs/`, and any contributing guidelines
-2. **PRP artifacts** — Check `.claude/PRPs/reports/` and `.claude/PRPs/plans/` for implementation context related to this PR
+2. **Workspace artifacts** — Check local docs or review notes that explain implementation intent
 3. **PR intent** — Parse PR description for goals, linked issues, test plans
 4. **Changed files** — List all modified files and categorize by type (source, test, config, docs)
 
@@ -119,7 +114,7 @@ Apply the review checklist across 7 categories:
 | Category | What to Check |
 |---|---|
 | **Correctness** | Logic errors, off-by-ones, null handling, edge cases, race conditions |
-| **Type Safety** | Type mismatches, unsafe casts, `any` usage, missing generics |
+| **Type Safety** | Type mismatches, unsafe casts, missing generics, interface contract issues |
 | **Pattern Compliance** | Matches project conventions (naming, file structure, error handling, imports) |
 | **Security** | Injection, auth gaps, secret exposure, SSRF, path traversal, XSS |
 | **Performance** | N+1 queries, missing indexes, unbounded loops, memory leaks, large payloads |
@@ -139,22 +134,7 @@ Assign severity to each finding:
 
 Run available validation commands:
 
-Detect the project type from config files (`package.json`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.), then run the appropriate commands:
-
-**Node.js / TypeScript** (has `package.json`):
-```bash
-npm run typecheck 2>/dev/null || npx tsc --noEmit 2>/dev/null  # Type check
-npm run lint                                                    # Lint
-npm test                                                        # Tests
-npm run build                                                   # Build
-```
-
-**Rust** (has `Cargo.toml`):
-```bash
-cargo clippy -- -D warnings  # Lint
-cargo test                   # Tests
-cargo build                  # Build
-```
+Detect the project type from config files (`go.mod`, `pom.xml`, `build.gradle`, `build.gradle.kts`) and run the appropriate commands:
 
 **Go** (has `go.mod`):
 ```bash
@@ -163,9 +143,15 @@ go test ./...   # Tests
 go build ./...  # Build
 ```
 
-**Python** (has `pyproject.toml` / `setup.py`):
+**Maven** (has `pom.xml`):
 ```bash
-pytest  # Tests
+./mvnw verify -q 2>/dev/null || mvn verify -q
+```
+
+**Gradle** (has `build.gradle` or `build.gradle.kts`):
+```bash
+./gradlew check
+./gradlew build
 ```
 
 Run only the commands that apply to the detected project type. Record pass/fail for each.
@@ -188,7 +174,11 @@ Special cases:
 
 ### Phase 6 — REPORT
 
-Create review artifact at `.claude/PRPs/reviews/pr-<NUMBER>-review.md`:
+If the workspace already has a review-notes directory, you may write a local artifact there.
+Otherwise, skip file creation and keep the review in the PR comment or terminal output.
+
+Suggested artifact path when a local review directory exists:
+`reviews/pr-<NUMBER>-review.md`
 
 ```markdown
 # PR Review: #<NUMBER> — <TITLE>
@@ -273,7 +263,7 @@ Issues: <critical_count> critical, <high_count> high, <medium_count> medium, <lo
 Validation: <pass_count>/<total_count> checks passed
 
 Artifacts:
-  Review: .claude/PRPs/reviews/pr-<NUMBER>-review.md
+  Review: reviews/pr-<NUMBER>-review.md (optional, only if the workspace uses local review artifacts)
   GitHub: <PR URL>
 
 Next steps:

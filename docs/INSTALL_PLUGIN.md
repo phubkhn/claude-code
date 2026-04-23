@@ -35,16 +35,17 @@ If your Claude Code installation uses a different plugin directory, adjust the p
 ## 4) Restart Claude Code
 
 - Restart the app/CLI so the new plugin is loaded.
-- Confirm that skills/hooks/commands from this repo are visible.
+- Confirm that `skills` and `commands` from this repo are visible.
+- Treat `agents/`, `rules/`, and `hooks/` as workspace conventions documented in this repository.
 
 ## 5) Smoke Test
 
-- Open `skills/`, `hooks/`, and `commands/`
+- Open `skills/` and `commands/`
 - Add one sample skill
 - Reload Claude Code and verify the skill appears
 
 ## Recommended Next Steps
 
-- Split skills by domain: backend/frontend/devops
+- Split skills by backend domain: java/go/security
 - Add a `pre-commit` hook for lint/test
-- Build command templates by stack (Python/Node/Go)
+- Build command templates by stack (Java/Go)

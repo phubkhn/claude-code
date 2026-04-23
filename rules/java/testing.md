@@ -121,9 +121,9 @@ Use descriptive names with `@DisplayName`:
 
 ## Coverage
 
-- Target 80%+ line coverage
-- Use JaCoCo for coverage reporting
-- Focus on service and domain logic — skip trivial getters/config classes
+- Use JaCoCo when the project already tracks coverage
+- Prefer improving coverage around service, domain, and controller logic
+- Skip trivial getters, generated code, and thin configuration classes unless the project explicitly requires them
 
 ## References
 

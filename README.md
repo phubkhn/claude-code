@@ -1,12 +1,12 @@
 # Claude Code Backend Plugin Kit
 
-This repository is a focused Claude Code plugin workspace for backend teams using Java/Spring and Go.
+This repository is a Claude Code plugin workspace for backend teams working on Java/Spring Boot and Go services.
 
 ## Goals
 
-- Keep reusable Java/Spring, Go, and security workflows in one place.
+- Keep reusable Java/Spring Boot, Go, and security workflows in one place.
 - Provide a plugin-ready structure for local install and future publishing.
-- Standardize review, build-fix, and security workflows.
+- Standardize review, build-fix, and security workflows for Java/Go codebases.
 
 ## Current Structure
 
@@ -56,8 +56,8 @@ This repository is a focused Claude Code plugin workspace for backend teams usin
 
 ### Rules
 
-- `rules/common/`: cross-project guardrails (workflow, security, hooks, code review).
-- `rules/java/`: Java/Spring conventions and checks.
+- `rules/common/`: guardrails shared across Java/Go workflows.
+- `rules/java/`: Java/Spring Boot conventions and checks.
 
 ### Skills
 
@@ -67,16 +67,37 @@ This repository is a focused Claude Code plugin workspace for backend teams usin
 
 ### Commands
 
-- Reusable command documents for review and build workflows.
+- Reusable command documents for Java/Go review and build workflows.
 
 ## Plugin Manifest Notes
 
 Plugin config lives in `.claude-plugin/plugin.json`.
-It follows an array-based component layout compatible with Claude plugin validation.
+It follows a minimal array-based component layout compatible with Claude plugin validation.
+
+## Scope
+
+This kit is intentionally focused on:
+
+- Java and Spring Boot services
+- Go services and libraries
+- Security review for Java/Go backend code
+
+It does not aim to provide Node.js, Rust, or Python workflows.
 
 ## Installation
 
-Use [docs/INSTALL_PLUGIN.md](/Users/dirak/Documents/AI/POC_MAKER/claude_code/claude-code/docs/INSTALL_PLUGIN.md).
+Use [docs/INSTALL_PLUGIN.md](docs/INSTALL_PLUGIN.md).
+
+## How To Use
+
+Use the repo as a shared operating guide for Claude Code:
+
+- pick a language-specific reviewer from `agents/`
+- apply `rules/common/` plus `rules/java/` when working on Spring Boot code
+- reuse `skills/` for implementation patterns and verification checklists
+- run `commands/` as repeatable review/build workflows
+
+The repo currently documents agents, rules, and hooks as workspace conventions. The plugin manifest currently exposes `skills` and `commands`.
 
 ## Contribution Rules
 

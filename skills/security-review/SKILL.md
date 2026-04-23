@@ -55,8 +55,8 @@ Use this skill to run a practical security pass before merge or release.
 
 ### 6) Dependency Security
 
-- Run dependency vulnerability scan (`dependency-check`, `npm audit`, etc.)
-- Patch critical/high CVEs before release
+- Review Maven/Gradle or Go module dependencies for known CVEs
+- Patch critical/high vulnerabilities before release
 - Remove unused or unmaintained packages
 
 ## Java / Spring Boot Focus

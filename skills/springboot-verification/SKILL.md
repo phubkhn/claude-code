@@ -1,6 +1,6 @@
 ---
 name: springboot-verification
-description: "Verification loop for Spring Boot projects: build, static analysis, tests with coverage, security scans, and diff review before release or PR."
+description: "Verification loop for Spring Boot projects: build, static analysis, tests, optional coverage reporting, security scans, and diff review before release or PR."
 origin: ECC
 ---
 
@@ -14,7 +14,7 @@ Run before PRs, after major changes, and pre-deploy.
 - After major refactoring or dependency upgrades
 - Pre-deployment verification for staging or production
 - Running full build → lint → test → security scan pipeline
-- Validating test coverage meets thresholds
+- Generating a coverage report when the project already uses coverage gates
 
 ## Phase 1: Build
 
@@ -38,18 +38,18 @@ Gradle (if configured):
 ./gradlew checkstyleMain pmdMain spotbugsMain
 ```
 
-## Phase 3: Tests + Coverage
+## Phase 3: Tests + Optional Coverage Report
 
 ```bash
 mvn -T 4 test
-mvn jacoco:report   # verify 80%+ coverage
+mvn jacoco:report   # when JaCoCo is configured
 # or
 ./gradlew test jacocoTestReport
 ```
 
 Report:
 - Total tests, passed/failed
-- Coverage % (lines/branches)
+- Coverage % (lines/branches) when reported by the project
 
 ### Unit Tests
 
@@ -212,7 +212,7 @@ VERIFICATION REPORT
 ===================
 Build:     [PASS/FAIL]
 Static:    [PASS/FAIL] (spotbugs/pmd/checkstyle)
-Tests:     [PASS/FAIL] (X/Y passed, Z% coverage)
+Tests:     [PASS/FAIL] (X/Y passed, coverage: optional)
 Security:  [PASS/FAIL] (CVE findings: N)
 Diff:      [X files changed]
 

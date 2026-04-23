@@ -32,9 +32,8 @@ Before marking code complete:
 - [ ] No deep nesting (>4 levels)
 - [ ] Errors are handled explicitly
 - [ ] No hardcoded secrets or credentials
-- [ ] No console.log or debug statements
-- [ ] Tests exist for new functionality
-- [ ] Test coverage meets 80% minimum
+- [ ] No debug logging or temporary diagnostics left in code
+- [ ] Tests exist for new functionality when the project already has test coverage for that area
 
 ## Security Review Triggers
 
@@ -75,9 +74,9 @@ Use these agents for code review:
 1. Run git diff to understand changes
 2. Check security checklist first
 3. Select reviewer by language (`go-reviewer` or `java-reviewer`)
-4. Run relevant tests
-5. Verify coverage >= 80%
-6. Use appropriate agent for detailed review
+4. Run relevant tests and build checks
+5. Use `security-reviewer` when the change touches sensitive flows
+6. Use the appropriate agent for detailed review
 ```
 
 ## Common Issues to Catch
@@ -98,7 +97,7 @@ Use these agents for code review:
 - Deep nesting (>4 levels) - use early returns
 - Missing error handling - handle explicitly
 - Mutation patterns - prefer immutable operations
-- Missing tests - add test coverage
+- Missing tests - add or update tests when the surrounding module already has automated coverage
 
 ### Performance
 
@@ -117,7 +116,7 @@ Use these agents for code review:
 
 This rule works with:
 
-- [testing.md](testing.md) - Test coverage requirements
+- [testing.md](testing.md) - Testing expectations and verification guidance
 - [security.md](security.md) - Security checklist
 - [git-workflow.md](git-workflow.md) - Commit standards
 - [agents.md](agents.md) - Agent delegation

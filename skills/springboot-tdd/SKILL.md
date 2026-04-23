@@ -6,7 +6,7 @@ origin: ECC
 
 # Spring Boot TDD Workflow
 
-TDD guidance for Spring Boot services with 80%+ coverage (unit + integration).
+Test-first guidance for Spring Boot services using a practical mix of unit and integration tests.
 
 ## When to Use
 
@@ -19,7 +19,7 @@ TDD guidance for Spring Boot services with 80%+ coverage (unit + integration).
 1) Write tests first (they should fail)
 2) Implement minimal code to pass
 3) Refactor with tests green
-4) Enforce coverage (JaCoCo)
+4) Re-run the smallest relevant verification loop
 
 ## Unit Tests (JUnit 5 + Mockito)
 
@@ -114,6 +114,9 @@ class MarketRepositoryTest {
 - Wire via `@DynamicPropertySource` to inject JDBC URLs into Spring context
 
 ## Coverage (JaCoCo)
+
+Use JaCoCo when the project already tracks coverage or needs a coverage report for CI.
+Prefer improving coverage around service, controller, and persistence behavior rather than chasing a fixed threshold in every project.
 
 Maven snippet:
 ```xml
