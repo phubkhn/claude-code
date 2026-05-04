@@ -1,18 +1,15 @@
 # Commands Directory
 
-This directory documents standard commands for Claude Code development workflows.
+This directory contains reusable command docs for Go review workflows.
 
-## Suggested Command Groups
+## Available Command
 
-- Setup: environment and dependencies
-- Validate: lint, test, type-check
-- Release: changelog, tag, publish
+- `code-review.md`: detailed review workflow for PR/MR scope or full-source workspace scope
 
-## Command Doc Template
+## Command Coverage
 
-Each command entry should include:
-- command name
-- purpose
-- input flags
-- usage example
-- expected output
+The code review command covers:
+
+- validation execution (`go test`, `go vet`, `staticcheck`, `go test -race`)
+- standards application across all `rules/go/*`
+- severity-based decision output (`APPROVE`, `APPROVE WITH COMMENTS`, `REQUEST CHANGES`, `BLOCK`)

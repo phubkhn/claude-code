@@ -1,37 +1,20 @@
 # Skills Directory
 
-This directory stores Claude Code skills.
+Reusable Go review skills.
 
 ## Current Skills
 
 - `golang-patterns`
-- `java-coding-standards`
-- `jpa-patterns`
-- `security-review`
-- `springboot-patterns`
-- `springboot-security`
-- `springboot-tdd`
-- `springboot-verification`
+- `go-review-standards`
+- `go-architecture-review`
+- `go-project-review`
 
-## Suggested Layout
+## Skill Contract
 
-```text
-skills/
-└── skill-name/
-    ├── SKILL.md
-    ├── examples.md
-    └── templates/
-```
+Each `SKILL.md` should define:
 
-## What A `SKILL.md` Should Include
-
-- Skill goal
-- Expected input
-- Expected output
-- Step-by-step workflow
-- Quality checklist
-
-## Rules
-
-- Each skill should solve one clear use case.
-- Keep examples short and practical.
+- scope
+- activation criteria
+- required workflow
+- severity and merge criteria
+- expected output format

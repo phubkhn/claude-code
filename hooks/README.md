@@ -1,14 +1,15 @@
 # Hooks Directory
 
-This directory describes hooks used for quality control in Claude Code workflows.
+## Recommended Hooks
 
-## Common Use Cases
+Recommended hooks for Go review workflows:
 
-- `pre-task`: validate context before execution
-- `pre-commit`: run format + lint + fast tests
-- `post-task`: summarize outcome and risks
+- `pre-commit`: run `go test ./...` and `go vet ./...`
+- `pre-push`: run `go test -race ./...` when feasible
+- `post-task`: summarize findings by severity
 
-## Recommendations
+## Guidelines
 
-- Hooks should be fast and deterministic.
-- On failure, return clear messages with direct remediation steps.
+Guidelines:
+- Keep hooks fast and deterministic.
+- On failure, provide direct remediation steps.

@@ -1,7 +1,7 @@
 {
-  "name": "claude-code-backend-kit",
-  "version": "0.3.0",
-  "description": "Claude Code plugin kit for Go and Java/Spring workflows with focused agents, skills, rules, and commands.",
+  "name": "claude-code-go-reviewer-kit",
+  "version": "1.0.0",
+  "description": "Go-only Claude Code reviewer kit with detailed standards and architecture review skills.",
   "skills": ["./skills/"],
   "commands": ["./commands/"]
 }

@@ -1,51 +1,52 @@
-# Install This Plugin Locally (Claude Code)
+# Install from GitHub (Without Marketplace)
 
-This guide explains how to install this repository as a local plugin for Claude Code.
+Use this flow when the plugin is not published to Marketplace yet.
 
-## 1) Clone The Repository
+## Step 1: Clone from GitHub
 
 ```bash
-git clone https://github.com/phubkhn/claude-code.git
-cd claude-code
+git clone https://github.com/phubkhn/claude-code.git "$HOME/.claude/plugins/src/claude-code-go-reviewer-kit"
+cd "$HOME/.claude/plugins/src/claude-code-go-reviewer-kit"
 ```
 
-## 2) Verify The Plugin Manifest
+## Step 2: Verify Plugin Manifest
 
-Make sure this file exists:
+Ensure this file exists:
 
 ```text
 .claude-plugin/plugin.json
 ```
 
-## 3) Link It Into Your Claude Code Plugin Path
-
-Depending on your local setup, you can:
-- register this repository in your Claude Code local plugin list
-- or create a symlink into the plugin directory Claude Code scans
-
-Example symlink (Linux/macOS):
+## Step 3: Register as Local Plugin
 
 ```bash
 mkdir -p "$HOME/.claude/plugins/local"
-ln -s "$(pwd)" "$HOME/.claude/plugins/local/claude-code-dev-kit"
+ln -sfn "$HOME/.claude/plugins/src/claude-code-go-reviewer-kit" \
+  "$HOME/.claude/plugins/local/claude-code-go-reviewer-kit"
 ```
 
-If your Claude Code installation uses a different plugin directory, adjust the path accordingly.
+`ln -sfn` allows re-running the command safely if the link already exists.
 
-## 4) Restart Claude Code
+## Step 4: Reload Claude Code
 
-- Restart the app/CLI so the new plugin is loaded.
-- Confirm that `skills` and `commands` from this repo are visible.
-- Treat `agents/`, `rules/`, and `hooks/` as workspace conventions documented in this repository.
+Restart Claude Code, then verify:
 
-## 5) Smoke Test
+- `go-reviewer` is available
+- skills from `skills/` are available
+- `code-review` command is available
 
-- Open `skills/` and `commands/`
-- Add one sample skill
-- Reload Claude Code and verify the skill appears
+## Update to Latest from GitHub
 
-## Recommended Next Steps
+```bash
+cd "$HOME/.claude/plugins/src/claude-code-go-reviewer-kit"
+git pull --ff-only
+```
 
-- Split skills by backend domain: java/go/security
-- Add a `pre-commit` hook for lint/test
-- Build command templates by stack (Java/Go)
+Reload Claude Code after updating.
+
+## Uninstall
+
+```bash
+rm "$HOME/.claude/plugins/local/claude-code-go-reviewer-kit"
+rm -rf "$HOME/.claude/plugins/src/claude-code-go-reviewer-kit"
+```

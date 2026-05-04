@@ -1,279 +1,82 @@
----
-description: Code review — local uncommitted changes or GitHub PR (pass PR number/URL for PR mode)
-argument-hint: [pr-number | pr-url | blank for local review]
+description: Detailed Go code review workflow for PR/MR scope or full-source workspace scope
+argument-hint: [pr-number | pr-url | mr-url | blank for full-source review]
 ---
 
-# Code Review
+# Go Code Review
 
-**Input**: $ARGUMENTS
+## Input
 
----
+`$ARGUMENTS`
 
 ## Mode Selection
 
-If `$ARGUMENTS` contains a PR number, PR URL, or `--pr`:
-→ Jump to **PR Review Mode** below.
+- If input contains PR/MR identifier or URL: use **PR/MR Review Mode**.
+- Otherwise: use **Full Source Review Mode** (entire workspace, not git diff).
 
-Otherwise:
-→ Use **Local Review Mode**.
+## Full Source Review Mode
 
----
-
-## Local Review Mode
-
-Comprehensive security and quality review of uncommitted changes.
-
-### Phase 1 — GATHER
+### Phase 1: Gather
 
 ```bash
-git diff --name-only HEAD
+rg --files -g '*.go' -g '!vendor/**' -g '!*_generated.go' -g '!**/*.pb.go'
 ```
 
-If no changed files, stop: "Nothing to review."
+If no Go source files are found, stop with `Nothing to review`.
 
-### Phase 2 — REVIEW
+### Phase 2: Validate
 
-Read each changed file in full. Check for:
+```bash
+go test ./...
+go vet ./...
+staticcheck ./... 2>/dev/null || echo "staticcheck not installed"
+go test -race ./... 2>/dev/null || echo "race test skipped"
+```
 
-**Security Issues (CRITICAL):**
-- Hardcoded credentials, API keys, tokens
-- SQL injection vulnerabilities
-- XSS vulnerabilities
-- Missing input validation
-- Insecure dependencies
-- Path traversal risks
+### Phase 3: Review
 
-**Code Quality (HIGH):**
-- Functions > 50 lines
-- Files > 800 lines
-- Nesting depth > 4 levels
-- Missing error handling
-- leftover debug logging
-- TODO/FIXME comments
+Apply every file from `rules/go/`:
 
-**Best Practices (MEDIUM):**
-- Mutation patterns (use immutable instead)
-- Missing tests for new code
+- `coding-style.md`
+- `testing.md`
+- `security.md`
+- `api-and-contracts.md`
+- `performance.md`
+- `observability.md`
+- `dependencies-and-config.md`
+- `architecture.md`
+- `review-checklist.md`
 
-### Phase 3 — REPORT
+### Phase 4: Decide
 
-Generate report with:
-- Severity: CRITICAL, HIGH, MEDIUM, LOW
-- File location and line numbers
-- Issue description
-- Suggested fix
+- CRITICAL -> BLOCK
+- HIGH -> REQUEST CHANGES
+- MEDIUM/LOW -> APPROVE WITH COMMENTS
+- no findings + checks pass -> APPROVE
 
-Block commit if CRITICAL or HIGH issues found.
-Never approve code with security vulnerabilities.
+## PR/MR Review Mode
 
----
-
-## PR Review Mode
-
-Comprehensive GitHub PR review — fetches diff, reads full files, runs validation, posts review.
-
-### Phase 1 — FETCH
-
-Parse input to determine PR:
-
-| Input | Action |
-|---|---|
-| Number (e.g. `42`) | Use as PR number |
-| URL (`github.com/.../pull/42`) | Extract PR number |
-| Branch name | Find PR via `gh pr list --head <branch>` |
+### Phase 1: Fetch
 
 ```bash
 gh pr view <NUMBER> --json number,title,body,author,baseRefName,headRefName,changedFiles,additions,deletions
 gh pr diff <NUMBER>
 ```
 
-If PR not found, stop with error. Store PR metadata for later phases.
+### Phase 2: Context
 
-### Phase 2 — CONTEXT
+- Read all `rules/go/*` standards.
+- Read full changed `.go` files at PR head.
+- Parse PR intent, scope, rollout notes, and test plan.
 
-Build review context:
+### Phase 3: Analyze
 
-1. **Project rules** — Read `CLAUDE.md`, `.claude/docs/`, and any contributing guidelines
-2. **Workspace artifacts** — Check local docs or review notes that explain implementation intent
-3. **PR intent** — Parse PR description for goals, linked issues, test plans
-4. **Changed files** — List all modified files and categorize by type (source, test, config, docs)
+Report findings by severity with file and line references.
+For architectural or cross-module changes, include explicit architecture findings.
 
-### Phase 3 — REVIEW
-
-Read each changed file **in full** (not just the diff hunks — you need surrounding context).
-
-For PR reviews, fetch the full file contents at the PR head revision:
-```bash
-gh pr diff <NUMBER> --name-only | while IFS= read -r file; do
-  gh api "repos/{owner}/{repo}/contents/$file?ref=<head-branch>" --jq '.content' | base64 -d
-done
-```
-
-Apply the review checklist across 7 categories:
-
-| Category | What to Check |
-|---|---|
-| **Correctness** | Logic errors, off-by-ones, null handling, edge cases, race conditions |
-| **Type Safety** | Type mismatches, unsafe casts, missing generics, interface contract issues |
-| **Pattern Compliance** | Matches project conventions (naming, file structure, error handling, imports) |
-| **Security** | Injection, auth gaps, secret exposure, SSRF, path traversal, XSS |
-| **Performance** | N+1 queries, missing indexes, unbounded loops, memory leaks, large payloads |
-| **Completeness** | Missing tests, missing error handling, incomplete migrations, missing docs |
-| **Maintainability** | Dead code, magic numbers, deep nesting, unclear naming, missing types |
-
-Assign severity to each finding:
-
-| Severity | Meaning | Action |
-|---|---|---|
-| **CRITICAL** | Security vulnerability or data loss risk | Must fix before merge |
-| **HIGH** | Bug or logic error likely to cause issues | Should fix before merge |
-| **MEDIUM** | Code quality issue or missing best practice | Fix recommended |
-| **LOW** | Style nit or minor suggestion | Optional |
-
-### Phase 4 — VALIDATE
-
-Run available validation commands:
-
-Detect the project type from config files (`go.mod`, `pom.xml`, `build.gradle`, `build.gradle.kts`) and run the appropriate commands:
-
-**Go** (has `go.mod`):
-```bash
-go vet ./...    # Lint
-go test ./...   # Tests
-go build ./...  # Build
-```
-
-**Maven** (has `pom.xml`):
-```bash
-./mvnw verify -q 2>/dev/null || mvn verify -q
-```
-
-**Gradle** (has `build.gradle` or `build.gradle.kts`):
-```bash
-./gradlew check
-./gradlew build
-```
-
-Run only the commands that apply to the detected project type. Record pass/fail for each.
-
-### Phase 5 — DECIDE
-
-Form recommendation based on findings:
-
-| Condition | Decision |
-|---|---|
-| Zero CRITICAL/HIGH issues, validation passes | **APPROVE** |
-| Only MEDIUM/LOW issues, validation passes | **APPROVE** with comments |
-| Any HIGH issues or validation failures | **REQUEST CHANGES** |
-| Any CRITICAL issues | **BLOCK** — must fix before merge |
-
-Special cases:
-- Draft PR → Always use **COMMENT** (not approve/block)
-- Only docs/config changes → Lighter review, focus on correctness
-- Explicit `--approve` or `--request-changes` flag → Override decision (but still report all findings)
-
-### Phase 6 — REPORT
-
-If the workspace already has a review-notes directory, you may write a local artifact there.
-Otherwise, skip file creation and keep the review in the PR comment or terminal output.
-
-Suggested artifact path when a local review directory exists:
-`reviews/pr-<NUMBER>-review.md`
-
-```markdown
-# PR Review: #<NUMBER> — <TITLE>
-
-**Reviewed**: <date>
-**Author**: <author>
-**Branch**: <head> → <base>
-**Decision**: APPROVE | REQUEST CHANGES | BLOCK
-
-## Summary
-<1-2 sentence overall assessment>
-
-## Findings
-
-### CRITICAL
-<findings or "None">
-
-### HIGH
-<findings or "None">
-
-### MEDIUM
-<findings or "None">
-
-### LOW
-<findings or "None">
-
-## Validation Results
-
-| Check | Result |
-|---|---|
-| Type check | Pass / Fail / Skipped |
-| Lint | Pass / Fail / Skipped |
-| Tests | Pass / Fail / Skipped |
-| Build | Pass / Fail / Skipped |
-
-## Files Reviewed
-<list of files with change type: Added/Modified/Deleted>
-```
-
-### Phase 7 — PUBLISH
-
-Post the review to GitHub:
+### Phase 4: Publish
 
 ```bash
-# If APPROVE
-gh pr review <NUMBER> --approve --body "<summary of review>"
-
-# If REQUEST CHANGES
-gh pr review <NUMBER> --request-changes --body "<summary with required fixes>"
-
-# If COMMENT only (draft PR or informational)
-gh pr review <NUMBER> --comment --body "<summary>"
+gh pr review <NUMBER> --approve --body "<summary>"
+gh pr review <NUMBER> --request-changes --body "<required fixes>"
+gh pr review <NUMBER> --comment --body "<comments>"
 ```
-
-For inline comments on specific lines, use the GitHub review comments API:
-```bash
-gh api "repos/{owner}/{repo}/pulls/<NUMBER>/comments" \
-  -f body="<comment>" \
-  -f path="<file>" \
-  -F line=<line-number> \
-  -f side="RIGHT" \
-  -f commit_id="$(gh pr view <NUMBER> --json headRefOid --jq .headRefOid)"
-```
-
-Alternatively, post a single review with multiple inline comments at once:
-```bash
-gh api "repos/{owner}/{repo}/pulls/<NUMBER>/reviews" \
-  -f event="COMMENT" \
-  -f body="<overall summary>" \
-  --input comments.json  # [{"path": "file", "line": N, "body": "comment"}, ...]
-```
-
-### Phase 8 — OUTPUT
-
-Report to user:
-
-```
-PR #<NUMBER>: <TITLE>
-Decision: <APPROVE|REQUEST_CHANGES|BLOCK>
-
-Issues: <critical_count> critical, <high_count> high, <medium_count> medium, <low_count> low
-Validation: <pass_count>/<total_count> checks passed
-
-Artifacts:
-  Review: reviews/pr-<NUMBER>-review.md (optional, only if the workspace uses local review artifacts)
-  GitHub: <PR URL>
-
-Next steps:
-  - <contextual suggestions based on decision>
-```
-
----
-
-## Edge Cases
-
-- **No `gh` CLI**: Fall back to local-only review (read the diff, skip GitHub publish). Warn user.
-- **Diverged branches**: Suggest `git fetch origin && git rebase origin/<base>` before review.
-- **Large PRs (>50 files)**: Warn about review scope. Focus on source changes first, then tests, then config/docs.
